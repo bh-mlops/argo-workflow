@@ -1,29 +1,21 @@
-# CRD that works on unpacking and tracking of files
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: hello-brikat  # Name of this Workflow
+  generateName: unpack-pipeline-
 spec:
-  entrypoint: hello-brikat
-  arguments:
-    parameters:
-      - name: message
-        value: "hello world"     # Defines "hello-world" as the "main" template
+  entrypoint: main
   templates:
+    - name: main
 
-    - name: hello-brikat         # Defines the "hello-world" template
-      container:
-        image: busybox
-        command: [echo]
-        args: ["hello world brikats"]   # This template runs "echo" in the "busybox" image with arguments "hello world"
+      steps:
+        # download tarball of data to be prepped for processing.
+      - - name: Download-tarball
+          template: download-tarball
     
-    - name: whalesay
-      inputs:
-        parameters:
-          - name: message  # Declares this template uses the 'message' parameter
-      container:
-        image: docker/whalesay
-        command: [cowsay]
-        args: ["{{inputs.parameters.message}}"]
-
-    
+    - name: download-tarball
+      script:
+        image: debian:12.14
+        command: [bash]
+        source: |
+          echo "Download tarball function"
+          wget -h
