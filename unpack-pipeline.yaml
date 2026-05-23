@@ -14,8 +14,8 @@ spec:
     
     - name: download-tarball
       script:
-        image: debian:12.14
-        command: [bash]
+        image: alpine:3.23.4
+        command: ["/bin/sh", "-c"]
         source: |
           echo "Download tarball function"
           wget -h

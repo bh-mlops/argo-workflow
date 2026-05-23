@@ -1,3 +1,3 @@
-FROM debian:12.14
+FROM alpine:3.23.4
 
 # install wget and other shell scripts to run. This image will hold the unpack code
