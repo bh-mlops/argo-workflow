@@ -4,10 +4,26 @@ kind: Workflow
 metadata:
   generateName: hello-brikat  # Name of this Workflow
 spec:
-  entrypoint: hello-brikat     # Defines "hello-world" as the "main" template
+  entrypoint: hello-brikat
+  arguments:
+    parameters:
+      - name: message
+        value: "hello world"     # Defines "hello-world" as the "main" template
   templates:
-  - name: hello-brikat         # Defines the "hello-world" template
-    container:
-      image: busybox
-      command: [echo]
-      args: ["hello world brikats"]   # This template runs "echo" in the "busybox" image with arguments "hello world"
+
+    - name: hello-brikat         # Defines the "hello-world" template
+      container:
+        image: busybox
+        command: [echo]
+        args: ["hello world brikats"]   # This template runs "echo" in the "busybox" image with arguments "hello world"
+    
+    - name: whalesay
+      inputs:
+        parameters:
+          - name: message  # Declares this template uses the 'message' parameter
+      container:
+        image: docker/whalesay
+        command: [cowsay]
+        args: ["{{inputs.parameters.message}}"]
+
+    
