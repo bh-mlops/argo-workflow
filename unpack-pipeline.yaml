@@ -11,6 +11,9 @@ spec:
         # download tarball of data to be prepped for processing.
       - - name: Download-tarball
           template: download-tarball
+      
+      - - name: file-exist
+          template: file-exist
     
     - name: download-tarball
       script:
@@ -18,4 +21,18 @@ spec:
         command: ["/bin/sh", "-c"]
         source: |
           echo "Download tarball function"
-          wget -h
+          mkdir -p /var/run/argo/outputs/artifacts/tmp/
+          wget https://maven-datasets.s3.amazonaws.com/Airbnb/Airbnb+Data.zip -O /var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip
+      outputs:
+        artifacts:
+        - name: exact-zip-file
+          path: /var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip
+          archive:
+            none: {}
+    
+    - name: file-exist
+      script:
+        image: alpine:3.23.4
+        command: ["/bin/sh", "-c"]
+        source: |
+          ls -al /var/run/argo/outputs/artifacts/tmp/
