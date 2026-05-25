@@ -43,4 +43,6 @@ spec:
         image: alpine:3.23.4
         command: ["/bin/sh", "-c"]
         source: |
-          echo "hello world"
+          ls -al  /var/run/argo/outputs/artifacts/tmp/
+          echo "unpacking zip bundle!"
+          unzip /var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip
