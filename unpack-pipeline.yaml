@@ -9,11 +9,15 @@ spec:
 
       steps:
         # download tarball of data to be prepped for processing.
-      - - name: Download-tarball
+      - - name: download-tarball
           template: download-tarball
       
-      - - name: file-exist
-          template: file-exist
+      - - name: extract
+          template: extract
+          arguments:
+            artifacts:
+              - name: exact-zip-file
+                from: "{{steps.download-tarball.outputs.artifacts.zip-file}}"
     
     - name: download-tarball
       script:
@@ -25,14 +29,18 @@ spec:
           wget https://maven-datasets.s3.amazonaws.com/Airbnb/Airbnb+Data.zip -O /var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip
       outputs:
         artifacts:
-        - name: exact-zip-file
-          path: /var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip
+        - name: zip-file
+          path: var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip
           archive:
             none: {}
     
-    - name: file-exist
+    - name: extract
+      inputs:
+        artifacts:
+          - name: exact-zip-file
+            path: /var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip
       script:
         image: alpine:3.23.4
         command: ["/bin/sh", "-c"]
         source: |
-          ls -al /var/run/argo/outputs/artifacts/tmp/
+          echo "hello world"
