@@ -18,10 +18,12 @@ spec:
             artifacts:
               - name: exact-zip-file
                 from: "{{steps.download-tarball.outputs.artifacts.zip-file}}"
+      
+      # TODO: save off the file directory in storage to be added for tracking
     
     - name: download-tarball
       script:
-        image: alpine:3.23.4
+        image: download-tarball:1.0.0
         command: ["/bin/sh", "-c"]
         source: |
           echo "Download tarball function"
@@ -45,4 +47,4 @@ spec:
         source: |
           ls -al  /var/run/argo/outputs/artifacts/tmp/
           echo "unpacking zip bundle!"
-          unzip /var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip
+          unzip /var/run/argo/outputs/artifacts/tmp/Airbnb+Data.zip -d /var/run/argo/outputs/artifacts/tmp/airbnb-data/
