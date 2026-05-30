@@ -53,3 +53,7 @@ argo submit -n argo unpack-pipeline.yaml
 Click on the running the job and should see that it succeeded.
 
 ![argo-workflow-test-run](argo-workflow-test-run.png)
+
+## Datastores(WIP)
+
+For this project, is going to be learning how to store the uncompressed object paths in different data stores to get to know which will be more performant.
