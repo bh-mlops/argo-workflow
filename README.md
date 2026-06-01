@@ -57,3 +57,85 @@ Click on the running the job and should see that it succeeded.
 ## Datastores(WIP)
 
 For this project, is going to be learning how to store the uncompressed object paths in different data stores to get to know which will be more performant.
+
+### Iceberg
+There will be 3 different types of tech that will be used to access the data.
+
+#### Minio
+
+Minio( Open source of S3 object storage ) - This came part of the argo workflow stack since it uses at a temporary storage backing.
+
+To access the console
+
+``` bash
+  # port forward command to access console
+  kubectl port-forward service/minio 9001:9001 -n argo
+
+  # commands to get the user name and password for console
+  kubectl get secret my-minio-cred -n argo -o jsonpath='{.data.accesskey}' | base64 --decode\n
+  kubectl get secret my-minio-cred -n argo -o jsonpath='{.data.secretkey}' | base64 --decode\n
+```
+Create a bucket called iceberg( it can be any name you want )
+
+### Nessie
+Use Nessie as a iceberg catalog.
+
+``` bash
+# create the namespace
+kubectl create namespace nessie-ns
+
+# install the nessie helm chart
+helm repo add nessie-helm https://charts.projectnessie.org
+helm repo update
+
+helm install -n nessie-ns nessie nessie-helm/nessie
+```
+
+### Trino
+Pull down their helm chart and setup the values.yaml using the example in the infrastructure folder
+
+``` bash
+# setup the namespace
+kubectl create namespace trino
+
+# pull down the chart
+helm repo add trino https://trinodb.github.io/charts
+
+# install the chart with the values file. Note would recommend to create a values-local.yaml for testing
+helm install example-trino-cluster trino/trino -f infrastructure/iceberg/trino-helm/values.yaml
+```
+After the chart gets deployed, it will setup the iceberg.properties file within the trino pod( trino/example-trino-cluster-trino-coordinator )
+
+```bash
+    [trino@example-trino-cluster-trino-coordinator-7949776fbc-t5zcm /]$ cd /etc/trino/catalog/
+[trino@example-trino-cluster-trino-coordinator-7949776fbc-t5zcm catalog]$ ls -al
+total 12
+drwxrwxrwx 3 root root 4096 May 29 02:12 .
+drwxrwxrwx 5 root root 4096 May 29 02:12 ..
+drwxr-xr-x 2 root root 4096 May 29 02:12 ..2026_05_29_02_12_36.396138654
+lrwxrwxrwx 1 root root   31 May 29 02:12 ..data -> ..2026_05_29_02_12_36.396138654
+lrwxrwxrwx 1 root root   25 May 29 02:12 iceberg.properties -> ..data/iceberg.properties
+lrwxrwxrwx 1 root root   23 May 29 02:12 tpcds.properties -> ..data/tpcds.properties
+lrwxrwxrwx 1 root root   22 May 29 02:12 tpch.properties -> ..data/tpch.properties
+```
+To access trino, you would need a trino client. Install the latest version of java. See [Trino CLI Documentation](https://trino.io/docs/current/client/cli.html)
+
+### Iceberg table example
+
+```bash
+
+    # create schema
+    CREATE SCHEMA iceberg.logging WITH (location = 's3a://iceberg/'); 
+
+    # creates table
+    CREATE TABLE iceberg.logging.events (
+    ->     level VARCHAR,
+    ->     event_time TIMESTAMP(6),
+    ->     message VARCHAR,
+    ->     call_stack ARRAY(VARCHAR)
+    -> )
+    -> WITH (
+    ->     format = 'PARQUET', -- Storage format (PARQUET, ORC, or AVRO)
+    ->     partitioning = ARRAY['day(event_time)'], -- Partition by day automatically
+    ->     location = 's3a://iceberg/');
+```
