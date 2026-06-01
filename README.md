@@ -133,9 +133,5 @@ To access trino, you would need a trino client. Install the latest version of ja
     ->     event_time TIMESTAMP(6),
     ->     message VARCHAR,
     ->     call_stack ARRAY(VARCHAR)
-    -> )
-    -> WITH (
-    ->     format = 'PARQUET', -- Storage format (PARQUET, ORC, or AVRO)
-    ->     partitioning = ARRAY['day(event_time)'], -- Partition by day automatically
-    ->     location = 's3a://iceberg/');
+    -> );
 ```
