@@ -8,6 +8,10 @@ spec:
     - name: main
 
       steps:
+        # when a new the file from the bucket comes in( determine resource resource type from event call ), workflow determines if the file is either a compressed or non-compressed file to be processed
+      - - name: compressed-uncompressed-file
+          template: compressed-uncompressed-file
+
         # download tarball of data to be prepped for processing.
       - - name: download-tarball
           template: download-tarball
@@ -19,8 +23,11 @@ spec:
               - name: exact-zip-file
                 from: "{{steps.download-tarball.outputs.artifacts.zip-file}}"
       
-      # TODO: save off the file directory in storage to be added for tracking
     
+  # templates
+    - name: compressed-uncompressed-file
+      script:
+        
     - name: download-tarball
       script:
         image: download-tarball:1.0.0

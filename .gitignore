@@ -428,3 +428,5 @@ FodyWeavers.xsd
 *.msm
 *.msp
 infrastructure/trino-helm/values-local.yaml
+infrastructure/iceberg/trino-helm/nohup.out
+infrastructure/argo-events/minio-secrets-local.yaml

@@ -1,0 +1,22 @@
+# The EventSource instructs Argo Events to listen to bucket notifications (e.g., s3:ObjectCreated:*) from a specific MinIO bucket.
+
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: minio-event-source
+  namespace: argo-events
+spec:
+  minio:
+    example-bucket:
+      bucket:
+        name: input-bucket
+      endpoint: minio-service.default.svc.cluster.local:9000
+      insecure: true
+      events:
+        - s3:ObjectCreated:*
+      accessKey:
+        key: accesskey
+        name: minio-creds
+      secretKey:
+        key: secretkey
+        name: minio-creds
