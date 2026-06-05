@@ -9,8 +9,8 @@ spec:
   minio:
     argo-workflow:
       bucket:
-        name: my-bucket
-      endpoint: minio.argo.svc.cluster.local:9001
+        name: argo-test
+      endpoint: minio-1780696959.minio.svc.cluster.local:9000
       insecure: true
       events:
         - s3:ObjectCreated:*
