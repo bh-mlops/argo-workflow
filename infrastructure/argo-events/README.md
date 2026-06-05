@@ -12,3 +12,5 @@ kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-events/stable/m
 # install event bus
 kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/stable/examples/eventbus/native.yaml
 ```
+
+TODO: Look at https://pipekit.io/blog/how-to-set-up-a-minio-artifact-repository-for-argo-workflows

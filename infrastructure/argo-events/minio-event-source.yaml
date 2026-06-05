@@ -7,10 +7,10 @@ metadata:
   namespace: argo-events
 spec:
   minio:
-    example-bucket:
+    argo-workflow:
       bucket:
-        name: input-bucket
-      endpoint: minio-service.default.svc.cluster.local:9000
+        name: my-bucket
+      endpoint: minio.argo.svc.cluster.local:9001
       insecure: true
       events:
         - s3:ObjectCreated:*

@@ -8,7 +8,7 @@ spec:
   dependencies:
     - name: minio-dep
       eventSourceName: minio-event-source
-      eventName: example-bucket
+      eventName: argo-worflow
   triggers:
     - template:
         name: workflow-trigger
@@ -25,9 +25,9 @@ spec:
                 arguments:
                   parameters:
                     - name: bucket
-                      value: "placeholder"
+                      value: "my-bucket"
                     - name: file
-                      value: "placeholder"
+                      value: "helloworld"
                 templates:
                   - name: process-file
                     inputs:
