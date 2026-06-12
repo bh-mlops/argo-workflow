@@ -6,13 +6,14 @@ metadata:
   namespace: argo-events
 spec:
   dependencies:
-    - name: minio-dep
+      # has to be the same name as the event-source
+    - name: minio-event-source
       eventSourceName: minio-event-source
-      eventName: argo-worflow
+      eventName: argo-workflow
   triggers:
     - template:
         name: workflow-trigger
-        argoWorkflow:
+        argo-workflow:
           operation: submit
           source:
             resource:
@@ -25,7 +26,7 @@ spec:
                 arguments:
                   parameters:
                     - name: bucket
-                      value: "my-bucket"
+                      value: "argo-test"
                     - name: file
                       value: "helloworld"
                 templates:
